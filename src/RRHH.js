@@ -94,7 +94,6 @@ export default function App() {
   const [auth, setAuth] = useState(false);
   const [pin, setPin] = useState("");
   const [step, setStep] = useState(1);
-  const [generated, setGenerated] = useState(false);
   const [p, setP] = useState({nombre:"",cedula:"",fechaNac:"",direccion:"",ciudad:"",telefono:"",email:"",eps:"",pension:"",arl:""});
   const [j, setJ] = useState({cargo:"",salario:"",fechaInicio:""});
   const up = (k,v) => setP(x=>({...x,[k]:v}));
@@ -104,7 +103,6 @@ export default function App() {
     const img = new Image();
     img.src = `${SHEET_URL}?${new URLSearchParams({origen:"RRHH",...p,cargo:j.cargo,salario:j.salario,fechaInicio:j.fechaInicio,docs_cedula:"",docs_hv:"",docs_otros:""}).toString()}`;
     generateWord(p, j);
-    setGenerated(true);
     setStep(3);
   };
 
