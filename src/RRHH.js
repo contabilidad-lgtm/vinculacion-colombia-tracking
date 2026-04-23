@@ -106,7 +106,7 @@ export default function App() {
     setStep(3);
   };
 
-  const reset = () => { setStep(1); setGenerated(false); setP({nombre:"",cedula:"",fechaNac:"",direccion:"",ciudad:"",telefono:"",email:"",eps:"",pension:"",arl:""}); setJ({cargo:"",salario:"",fechaInicio:""}); };
+  const reset = () => { setStep(1); setP({nombre:"",cedula:"",fechaNac:"",direccion:"",ciudad:"",telefono:"",email:"",eps:"",pension:"",arl:""}); setJ({cargo:"",salario:"",fechaInicio:""}); };
 
   const Header = () => (
     <>
