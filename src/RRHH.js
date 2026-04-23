@@ -99,11 +99,25 @@ export default function App() {
   const up = (k,v) => setP(x=>({...x,[k]:v}));
   const uj = (k,v) => setJ(x=>({...x,[k]:v}));
 
-  const generate = () => {
-    const img = new Image();
-    img.src = `${SHEET_URL}?${new URLSearchParams({origen:"RRHH",...p,cargo:j.cargo,salario:j.salario,fechaInicio:j.fechaInicio,docs_cedula:"",docs_hv:"",docs_otros:""}).toString()}`;
-    generateWord(p, j);
-    setStep(3);
+  const [loading, setLoading] = useState(false);
+
+  const generate = async () => {
+    if(!j.cargo||!j.salario||!j.fechaInicio) return alert("Complete todos los campos del cargo.");
+    setLoading(true);
+    try {
+      const params = new URLSearchParams({
+        origen:"RRHH", ...p, cargo:j.cargo, salario:j.salario,
+        fechaInicio:j.fechaInicio, docs_cedula:"", docs_hv:"", docs_otros:""
+      });
+      const img = new Image();
+      img.src = `${SHEET_URL}?${params.toString()}`;
+      // Espera 3 segundos para que el script procese
+      await new Promise(r => setTimeout(r, 3000));
+      setStep(3);
+    } catch(err) {
+      alert("Error al generar el contrato.");
+    }
+    setLoading(false);
   };
 
   const reset = () => { setStep(1); setP({nombre:"",cedula:"",fechaNac:"",direccion:"",ciudad:"",telefono:"",email:"",eps:"",pension:"",arl:""}); setJ({cargo:"",salario:"",fechaInicio:""}); };
@@ -235,11 +249,9 @@ export default function App() {
                 </div>
                 <div className="mt-8 pt-6 border-t border-gray-100 flex justify-between">
                   <button onClick={()=>setStep(1)} className="text-sm text-gray-500 hover:text-gray-700 font-semibold">← Anterior</button>
-                  <button onClick={()=>{
-                    if(!j.cargo||!j.salario||!j.fechaInicio) return alert("Complete todos los campos del cargo.");
-                    generate();
-                  }} className="bg-green-700 hover:bg-green-800 text-white px-8 py-2.5 rounded text-sm font-bold uppercase tracking-wider transition-colors">
-                    📄 Generar Contrato Word
+                  <button onClick={generate} disabled={loading}
+                    className="bg-green-700 hover:bg-green-800 text-white px-8 py-2.5 rounded text-sm font-bold uppercase tracking-wider transition-colors disabled:opacity-50">
+                    {loading ? "⏳ Generando..." : "📄 Generar Contrato"}
                   </button>
                 </div>
               </div>
