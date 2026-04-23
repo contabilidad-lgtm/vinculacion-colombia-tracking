@@ -5,17 +5,6 @@ const PIN = "2107";
 const MONTHS = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
 const fmtDate = s => { if(!s) return ""; const [y,m,d]=s.split("-"); return `${+d} de ${MONTHS[+m-1]} de ${y}`; };
 
-const LOGO = `<svg viewBox="0 0 110 110" width="52" height="52" xmlns="http://www.w3.org/2000/svg">
-<g transform="rotate(-38,55,55)"><rect x="2" y="44" width="38" height="18" rx="2" fill="#3a5fcd"/><line x1="15" y1="44" x2="15" y2="62" stroke="white" stroke-width="0.8" opacity="0.5"/><line x1="27" y1="44" x2="27" y2="62" stroke="white" stroke-width="0.8" opacity="0.5"/></g>
-<g transform="rotate(-38,55,55)"><rect x="70" y="44" width="38" height="18" rx="2" fill="#3a5fcd"/><line x1="83" y1="44" x2="83" y2="62" stroke="white" stroke-width="0.8" opacity="0.5"/><line x1="95" y1="44" x2="95" y2="62" stroke="white" stroke-width="0.8" opacity="0.5"/></g>
-<g transform="rotate(-38,55,55)"><rect x="42" y="40" width="26" height="26" rx="3" fill="#1a1a1a"/></g>
-<path d="M55 28 C46 28 39 35 39 44 C39 56 55 72 55 72 C55 72 71 56 71 44 C71 35 64 28 55 28Z" fill="#111"/>
-<circle cx="55" cy="44" r="7" fill="white"/><circle cx="55" cy="44" r="3" fill="#222"/>
-<path d="M47 25 Q55 18 63 25" fill="none" stroke="#111" stroke-width="2" stroke-linecap="round"/>
-<path d="M43 20 Q55 11 67 20" fill="none" stroke="#111" stroke-width="1.8" stroke-linecap="round"/>
-<path d="M39 15 Q55 4 71 15" fill="none" stroke="#111" stroke-width="1.5" stroke-linecap="round"/>
-</svg>`;
-
 const buildContract = (p,j) => `Entre:
 
 COLOMBIA TRACKING SAS, identificada con NIT 901.332.415, con domicilio en Bogotá D.C., representada legalmente por CRISTIAN CAMILO ALMARIO, quien para efectos del presente contrato se denominará EL EMPLEADOR.
@@ -81,11 +70,11 @@ Colombia Tracking SAS`;
 
 const Field = ({label,value,onChange,type="text",placeholder="",req=true,col2=false}) => (
   <div className={col2?"col-span-2":""}>
-    <label className="block text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wide">
-      {label}{req&&<span className="text-red-400">*</span>}
+    <label className="block text-xs font-bold text-gray-600 mb-1.5 uppercase tracking-widest">
+      {label}{req&&<span className="text-red-500 ml-0.5">*</span>}
     </label>
     <input type={type} value={value} onChange={e=>onChange(e.target.value)} placeholder={placeholder}
-      className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white"/>
+      className="w-full border border-gray-300 rounded px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-blue-900 bg-gray-50 text-gray-800 placeholder-gray-400"/>
   </div>
 );
 
@@ -103,10 +92,7 @@ export default function App() {
 
   const generate = () => {
     const img = new Image();
-    img.src = `${SHEET_URL}?${new URLSearchParams({
-      origen:"RRHH", ...p, cargo:j.cargo, salario:j.salario, fechaInicio:j.fechaInicio,
-      docs_cedula:"", docs_hv:"", docs_otros:""
-    }).toString()}`;
+    img.src = `${SHEET_URL}?${new URLSearchParams({origen:"RRHH",...p,cargo:j.cargo,salario:j.salario,fechaInicio:j.fechaInicio,docs_cedula:"",docs_hv:"",docs_otros:""}).toString()}`;
     setContract(buildContract(p,j));
     setStep(3);
   };
@@ -125,32 +111,74 @@ export default function App() {
 
   const reset = () => { setStep(1); setContract(null); setP({nombre:"",cedula:"",fechaNac:"",direccion:"",ciudad:"",telefono:"",email:"",eps:"",pension:"",arl:""}); setJ({cargo:"",salario:"",fechaInicio:""}); };
 
+  const Header = () => (
+    <>
+      <div className="bg-blue-950 text-white px-6 py-4 shadow-lg">
+        <div className="max-w-3xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="w-10 h-10 bg-white rounded flex items-center justify-center">
+              <svg viewBox="0 0 110 110" width="28" height="28" xmlns="http://www.w3.org/2000/svg">
+                <g transform="rotate(-38,55,55)"><rect x="2" y="44" width="38" height="18" rx="2" fill="#3a5fcd"/></g>
+                <g transform="rotate(-38,55,55)"><rect x="70" y="44" width="38" height="18" rx="2" fill="#3a5fcd"/></g>
+                <g transform="rotate(-38,55,55)"><rect x="42" y="40" width="26" height="26" rx="3" fill="#1a1a1a"/></g>
+                <path d="M55 28 C46 28 39 35 39 44 C39 56 55 72 55 72 C55 72 71 56 71 44 C71 35 64 28 55 28Z" fill="#111"/>
+                <circle cx="55" cy="44" r="7" fill="white"/><circle cx="55" cy="44" r="3" fill="#222"/>
+              </svg>
+            </div>
+            <div>
+              <p className="font-black text-sm tracking-widest">COLOMBIA TRACKING SAS</p>
+              <p className="text-blue-300 text-xs">INNOVATIVE AND SAFETY LOGISTICS</p>
+            </div>
+          </div>
+          <div className="text-right hidden sm:block">
+            <p className="text-xs text-blue-300">NIT 901.332.415</p>
+            <p className="text-xs text-blue-300">Bogotá D.C., Colombia</p>
+          </div>
+        </div>
+      </div>
+      <div className="bg-white border-b border-gray-200 px-6 py-3 shadow-sm">
+        <div className="max-w-3xl mx-auto flex items-center justify-between">
+          <div>
+            <h1 className="text-sm font-bold text-gray-800 uppercase tracking-wider">Panel de Recursos Humanos</h1>
+            <p className="text-xs text-gray-500 mt-0.5">Gestión de Vinculación de Personal</p>
+          </div>
+          <span className="bg-blue-950 text-white text-xs px-3 py-1 rounded font-bold tracking-wide">🏢 RRHH</span>
+        </div>
+      </div>
+    </>
+  );
+
   if(!auth) return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-950 to-blue-800 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-sm w-full text-center">
-        <div className="flex justify-center mb-3" dangerouslySetInnerHTML={{__html:LOGO}}/>
-        <h1 className="font-black text-blue-950 text-sm tracking-widest mb-1">COLOMBIA TRACKING SAS</h1>
-        <p className="text-xs text-gray-400 mb-6">Acceso exclusivo · Recursos Humanos</p>
-        <label className="block text-xs font-semibold text-gray-500 mb-2 uppercase">PIN de acceso</label>
-        <input type="password" value={pin} onChange={e=>setPin(e.target.value)}
-          onKeyDown={e=>e.key==="Enter"&&(pin===PIN?setAuth(true):alert("PIN incorrecto"))}
-          placeholder="••••" className="w-full border border-gray-200 rounded-lg px-4 py-3 text-center text-lg tracking-widest focus:outline-none focus:ring-2 focus:ring-blue-400 mb-4"/>
-        <button onClick={()=>pin===PIN?setAuth(true):alert("PIN incorrecto")}
-          className="w-full bg-blue-950 text-white py-2.5 rounded-lg hover:bg-blue-800 text-sm font-semibold">
-          Ingresar
-        </button>
+    <div className="min-h-screen bg-gray-100 flex flex-col">
+      <Header/>
+      <div className="flex-1 flex items-center justify-center p-4">
+        <div className="bg-white rounded shadow-sm border border-gray-200 p-8 max-w-sm w-full">
+          <div className="text-center mb-6">
+            <div className="w-12 h-12 bg-blue-950 rounded flex items-center justify-center mx-auto mb-3">
+              <span className="text-white text-xl">🔐</span>
+            </div>
+            <h2 className="font-black text-gray-800 uppercase tracking-wider text-sm">Acceso Restringido</h2>
+            <p className="text-xs text-gray-500 mt-1">Ingrese su PIN de acceso para continuar</p>
+          </div>
+          <label className="block text-xs font-bold text-gray-600 mb-1.5 uppercase tracking-widest">PIN de Acceso</label>
+          <input type="password" value={pin} onChange={e=>setPin(e.target.value)}
+            onKeyDown={e=>e.key==="Enter"&&(pin===PIN?setAuth(true):alert("PIN incorrecto"))}
+            placeholder="••••" className="w-full border border-gray-300 rounded px-4 py-3 text-center text-lg tracking-widest focus:outline-none focus:ring-2 focus:ring-blue-900 bg-gray-50 mb-4"/>
+          <button onClick={()=>pin===PIN?setAuth(true):alert("PIN incorrecto")}
+            className="w-full bg-blue-950 hover:bg-blue-900 text-white py-2.5 rounded text-sm font-bold uppercase tracking-wider transition-colors">
+            Ingresar al Sistema
+          </button>
+        </div>
       </div>
     </div>
   );
 
   return (
     <>
-    {/* Área de impresión */}
     <div id="print-root" ref={printRef} style={{display:"none",fontFamily:"Arial,sans-serif",fontSize:"10.5pt",lineHeight:"1.65",color:"#000"}}>
       <div style={{position:"relative",width:"100%",height:"90px",overflow:"hidden"}}>
         <div style={{position:"absolute",top:0,right:0,width:"55%",height:"100%",background:"#0d1f4e",clipPath:"polygon(12% 0%,100% 0%,100% 100%,0% 100%)"}}/>
         <div style={{position:"absolute",top:"10px",left:"18px",display:"flex",alignItems:"center",gap:"10px"}}>
-          <div dangerouslySetInnerHTML={{__html:LOGO}}/>
           <div style={{display:"flex",flexDirection:"column"}}>
             <span style={{fontSize:"11pt",fontWeight:900,color:"#0d1f4e"}}>COLOMBIA TRACKING SAS</span>
             <span style={{fontSize:"7pt",color:"#555"}}>INNOVATIVE AND SAFETY LOGISTICS</span>
@@ -178,96 +206,109 @@ export default function App() {
       </div>
     </div>
 
-    <div className="min-h-screen bg-gradient-to-br from-blue-950 to-blue-800 p-4">
-      <div className="max-w-2xl mx-auto">
-        <div className="bg-white rounded-2xl px-6 py-4 mb-4 shadow-sm flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div dangerouslySetInnerHTML={{__html:LOGO}}/>
-            <div>
-              <p className="font-black text-blue-950 text-sm tracking-wide">COLOMBIA TRACKING SAS</p>
-              <p className="text-xs text-gray-400">Panel RRHH · Vinculación de Personal</p>
-            </div>
-          </div>
-          <span className="bg-blue-950 text-white text-xs px-3 py-1 rounded-full font-semibold">🏢 RRHH</span>
-        </div>
+    <div className="min-h-screen bg-gray-100 flex flex-col">
+      <Header/>
+      <div className="flex-1 py-8 px-4">
+        <div className="max-w-3xl mx-auto">
+          <div className="bg-white rounded shadow-sm border border-gray-200 p-8">
 
-        <div className="bg-white rounded-2xl shadow-sm p-6">
-          {step<3&&(
-            <div className="flex items-center justify-center mb-6">
-              {["Datos Personales","Datos del Cargo"].map((lbl,i)=>{
-                const s=i+1,active=step===s,done=step>s;
-                return <div key={s} className="flex items-center">
-                  <div className="flex flex-col items-center">
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${done?"bg-green-500 text-white":active?"bg-blue-900 text-white":"bg-gray-200 text-gray-400"}`}>{done?"✓":s}</div>
-                    <span className={`text-xs mt-1 hidden sm:block ${active?"text-blue-900 font-semibold":"text-gray-400"}`}>{lbl}</span>
+            {step<3&&(
+              <div className="mb-8">
+                <div className="flex items-center">
+                  {["Datos Personales","Datos del Cargo"].map((lbl,i)=>{
+                    const s=i+1,active=step===s,done=step>s;
+                    return <div key={s} className="flex items-center flex-1">
+                      <div className="flex items-center gap-2">
+                        <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-all
+                          ${done?"bg-blue-950 border-blue-950 text-white":active?"bg-white border-blue-950 text-blue-950":"bg-white border-gray-300 text-gray-400"}`}>
+                          {done?"✓":s}
+                        </div>
+                        <span className={`text-xs font-semibold hidden sm:block ${active?"text-blue-950":done?"text-blue-950":"text-gray-400"}`}>{lbl}</span>
+                      </div>
+                      {s<2&&<div className={`flex-1 h-0.5 mx-3 ${done?"bg-blue-950":"bg-gray-200"}`}/>}
+                    </div>;
+                  })}
+                </div>
+              </div>
+            )}
+
+            {step===1&&(
+              <div>
+                <div className="border-l-4 border-blue-950 pl-4 mb-6">
+                  <h2 className="text-base font-bold text-gray-800 uppercase tracking-wide">Información Personal del Colaborador</h2>
+                  <p className="text-xs text-gray-500 mt-1">Complete todos los campos requeridos</p>
+                </div>
+                <div className="grid grid-cols-2 gap-5">
+                  <Field label="Nombre completo" value={p.nombre} onChange={v=>up("nombre",v)} placeholder="Juan Carlos Pérez" col2/>
+                  <Field label="Número de cédula" value={p.cedula} onChange={v=>up("cedula",v)} placeholder="1.023.456.789"/>
+                  <Field label="Fecha de nacimiento" value={p.fechaNac} onChange={v=>up("fechaNac",v)} type="date"/>
+                  <Field label="Dirección" value={p.direccion} onChange={v=>up("direccion",v)} placeholder="Cra 15 # 80-45" col2/>
+                  <Field label="Ciudad" value={p.ciudad} onChange={v=>up("ciudad",v)} placeholder="Bogotá D.C."/>
+                  <Field label="Teléfono" value={p.telefono} onChange={v=>up("telefono",v)} placeholder="3001234567"/>
+                  <Field label="Correo electrónico" value={p.email} onChange={v=>up("email",v)} type="email" placeholder="correo@ejemplo.com" req={false} col2/>
+                  <Field label="EPS" value={p.eps} onChange={v=>up("eps",v)} placeholder="Nueva EPS"/>
+                  <Field label="Fondo de pensión" value={p.pension} onChange={v=>up("pension",v)} placeholder="Porvenir"/>
+                  <Field label="ARL" value={p.arl} onChange={v=>up("arl",v)} placeholder="Sura" req={false}/>
+                </div>
+                <div className="mt-8 pt-6 border-t border-gray-100 flex justify-end">
+                  <button onClick={()=>{
+                    if(!p.nombre||!p.cedula) return alert("Complete nombre y cédula.");
+                    setStep(2);
+                  }} className="bg-blue-950 hover:bg-blue-900 text-white px-8 py-2.5 rounded text-sm font-bold uppercase tracking-wider transition-colors">
+                    Continuar →
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {step===2&&(
+              <div>
+                <div className="border-l-4 border-blue-950 pl-4 mb-6">
+                  <h2 className="text-base font-bold text-gray-800 uppercase tracking-wide">Condiciones del Cargo</h2>
+                  <p className="text-xs text-gray-500 mt-1">Contrato a Término Fijo · 6 meses</p>
+                </div>
+                <div className="grid grid-cols-2 gap-5">
+                  <Field label="Cargo" value={j.cargo} onChange={v=>uj("cargo",v)} placeholder="Técnico GPS" col2/>
+                  <Field label="Salario mensual ($)" value={j.salario} onChange={v=>uj("salario",v)} placeholder="1.423.500"/>
+                  <Field label="Fecha de inicio" value={j.fechaInicio} onChange={v=>uj("fechaInicio",v)} type="date"/>
+                </div>
+                <div className="mt-8 pt-6 border-t border-gray-100 flex justify-between">
+                  <button onClick={()=>setStep(1)} className="text-sm text-gray-500 hover:text-gray-700 font-semibold">← Anterior</button>
+                  <button onClick={()=>{
+                    if(!j.cargo||!j.salario||!j.fechaInicio) return alert("Complete todos los campos del cargo.");
+                    generate();
+                  }} className="bg-green-700 hover:bg-green-800 text-white px-8 py-2.5 rounded text-sm font-bold uppercase tracking-wider transition-colors">
+                    📄 Generar Contrato
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {step===3&&contract&&(
+              <div>
+                <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
+                  <div className="border-l-4 border-green-600 pl-4">
+                    <h2 className="text-base font-bold text-gray-800 uppercase tracking-wide">Contrato Generado</h2>
+                    <p className="text-xs text-gray-500">{p.nombre} · {j.cargo} · Término Fijo</p>
                   </div>
-                  {s<2&&<div className={`w-20 h-0.5 mx-1 mb-4 ${done?"bg-green-400":"bg-gray-200"}`}/>}
-                </div>;
-              })}
-            </div>
-          )}
-
-          {step===1&&(
-            <div>
-              <h2 className="text-base font-bold text-gray-800 mb-1">Datos Personales</h2>
-              <p className="text-xs text-gray-400 mb-5">Información del nuevo colaborador</p>
-              <div className="grid grid-cols-2 gap-4">
-                <Field label="Nombre completo" value={p.nombre} onChange={v=>up("nombre",v)} placeholder="Juan Carlos Pérez" col2/>
-                <Field label="Cédula" value={p.cedula} onChange={v=>up("cedula",v)} placeholder="1.023.456.789"/>
-                <Field label="Fecha de nacimiento" value={p.fechaNac} onChange={v=>up("fechaNac",v)} type="date"/>
-                <Field label="Dirección" value={p.direccion} onChange={v=>up("direccion",v)} placeholder="Cra 15 # 80-45" col2/>
-                <Field label="Ciudad" value={p.ciudad} onChange={v=>up("ciudad",v)} placeholder="Bogotá D.C."/>
-                <Field label="Teléfono" value={p.telefono} onChange={v=>up("telefono",v)} placeholder="3001234567"/>
-                <Field label="Correo" value={p.email} onChange={v=>up("email",v)} type="email" placeholder="correo@ejemplo.com" req={false} col2/>
-                <Field label="EPS" value={p.eps} onChange={v=>up("eps",v)} placeholder="Nueva EPS"/>
-                <Field label="Pensión" value={p.pension} onChange={v=>up("pension",v)} placeholder="Porvenir"/>
-                <Field label="ARL" value={p.arl} onChange={v=>up("arl",v)} placeholder="Sura" req={false}/>
-              </div>
-              <div className="mt-6 flex justify-end">
-                <button onClick={()=>{
-                  if(!p.nombre||!p.cedula) return alert("Completa nombre y cédula.");
-                  setStep(2);
-                }} className="bg-blue-950 text-white px-6 py-2 rounded-lg hover:bg-blue-800 text-sm font-semibold">Continuar →</button>
-              </div>
-            </div>
-          )}
-
-          {step===2&&(
-            <div>
-              <h2 className="text-base font-bold text-gray-800 mb-1">Datos del Cargo</h2>
-              <p className="text-xs text-gray-400 mb-5">Condiciones laborales · Contrato Término Fijo</p>
-              <div className="grid grid-cols-2 gap-4">
-                <Field label="Cargo" value={j.cargo} onChange={v=>uj("cargo",v)} placeholder="Técnico GPS" col2/>
-                <Field label="Salario mensual ($)" value={j.salario} onChange={v=>uj("salario",v)} placeholder="1.423.500"/>
-                <Field label="Fecha de inicio" value={j.fechaInicio} onChange={v=>uj("fechaInicio",v)} type="date"/>
-              </div>
-              <div className="mt-6 flex justify-between">
-                <button onClick={()=>setStep(1)} className="text-sm text-gray-400 hover:text-gray-600">← Anterior</button>
-                <button onClick={()=>{
-                  if(!j.cargo||!j.salario||!j.fechaInicio) return alert("Completa todos los campos.");
-                  generate();
-                }} className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 text-sm font-semibold">📄 Generar Contrato</button>
-              </div>
-            </div>
-          )}
-
-          {step===3&&contract&&(
-            <div>
-              <div className="flex items-center justify-between mb-5 flex-wrap gap-2">
-                <div>
-                  <h2 className="text-base font-bold text-gray-800">✅ Contrato Generado</h2>
-                  <p className="text-xs text-gray-400">{p.nombre} · {j.cargo} · Término Fijo</p>
+                  <div className="flex gap-2">
+                    <button onClick={reset} className="px-4 py-2 border border-gray-300 rounded text-xs text-gray-600 hover:bg-gray-50 font-semibold uppercase tracking-wide">
+                      🔄 Nueva Vinculación
+                    </button>
+                    <button onClick={handlePrint} className="bg-blue-950 hover:bg-blue-900 text-white px-4 py-2 rounded text-xs font-bold uppercase tracking-wide transition-colors">
+                      🖨️ Imprimir / PDF
+                    </button>
+                  </div>
                 </div>
-                <div className="flex gap-2">
-                  <button onClick={reset} className="px-3 py-2 border border-gray-200 rounded-lg text-xs text-gray-500 hover:bg-gray-50">🔄 Nueva vinculación</button>
-                  <button onClick={handlePrint} className="bg-blue-950 text-white px-4 py-2 rounded-lg hover:bg-blue-800 text-xs font-semibold">🖨️ Imprimir / PDF</button>
+                <div className="bg-gray-50 border border-gray-200 rounded p-5 text-xs font-mono leading-relaxed whitespace-pre-wrap text-gray-800 max-h-96 overflow-y-auto">
+                  {contract}
                 </div>
               </div>
-              <div className="bg-gray-50 border border-gray-200 rounded-xl p-5 text-xs font-mono leading-relaxed whitespace-pre-wrap text-gray-800 max-h-96 overflow-y-auto">
-                {contract}
-              </div>
-            </div>
-          )}
+            )}
+          </div>
+          <div className="text-center mt-6">
+            <p className="text-xs text-gray-400">© 2026 Colombia Tracking SAS · NIT 901.332.415 · Bogotá D.C.</p>
+          </div>
         </div>
       </div>
     </div>
